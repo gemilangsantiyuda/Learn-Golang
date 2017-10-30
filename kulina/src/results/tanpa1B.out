@@ -1,0 +1,136 @@
+Rider  1 dengan Path :
+ [Dapur Miji 1FZHZOZW 216FL94T 3V758V8K 58OGIWIZ 5N0HQP9M 4L3HMEFP 5TMUO6HJ 2I5G783T 1FD97O63 QW6T4XUZ 4JYGUWSR 50U5H7Z9 5P5B2LCP] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  11.479181780494505
+-----------------------------------------------------------------
+Rider  2 dengan Path :
+ [Pondok Rawon 5QB1387V 37WYDQAL 341PYND9 1IY8NTQS 4CV8X25C 1VK1XOAO 1EREMSX4 7Z9GBZJM 217XCGF0 UH00QOU8 38NDP0W9 5V325JCT 5SQAGZ43 3TYZ7M4Y 207MQSJN] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  5.466505279561207
+-----------------------------------------------------------------
+Rider  3 dengan Path :
+ [Familia Catering 3T2W84PS 3EH41GC2 21BP7S94 3E6F9JPF 2OR6O6PD 56BBU975 37MDLON0 5206CY92 3BW1116B 51ZY8YWN 5PBGTXL2 2GU1ULZC 3RMHZUBC 217R4KWC 4DAHFVA5 4ZJ58XFT] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  37.09209478718807
+-----------------------------------------------------------------
+Rider  4 dengan Path :
+ [Rose Catering 3QY2PX9S 25T6WIX6 2MMGF15J 2F9A53BF RD09VM2V 3RQTCAZ9 70HJ86KJ 9BKOTYZM 4E74CSUP UPZ3XRMC] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  34.944552353719935
+-----------------------------------------------------------------
+Rider  5 dengan Path :
+ [Tiga Kitchen Catering 1ETNG7M2 1BELNM6L 1ZPZKUUL 56D5EYXT 3V9H3CNV 5PB8GTQP 1BEQW0G9 34JD8T7P Q6BY9KLR 21BVT9YU 57FWCQEC 35MHY7L8 1A5YLSXO 4G9CNKB6 4GA52MRU 532Z3TMZ 57JM3D34 8B9S30VE 4F7BUGNX 1DBK824Y] 
+Membawa  39  makanan
+dengan Jarak Tempuh:  26.30855130255057
+-----------------------------------------------------------------
+Rider  6 dengan Path :
+ [Dapur Nusantara 3RKFWUSO 3VDRVNC3 1ADPV20M 3NSJYCDR 197OGONO WVQJYLQW 3ZONK3PA 5QB198KW TIY9X08X 4IWN4UHT 4IQO0CYR 50NWB01K 3D02F7Y4 6Q82SGTO 5OB24Q2I 3B5ZSV41] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  27.6166637776615
+-----------------------------------------------------------------
+Rider  7 dengan Path :
+ [Dapur Miji 2PP9C4RW 99JPN82I 4CWFSOVV 2NI8PFRH 2S5SIAX6 569QB7TL 2K210EOB 25NJXBFS 9EWYWYRG 1DTG5UN9 U9L34QQH 3WHIQ4A6 5TU0F8SR 2KBT36Z6 1VOEJ8JH] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  28.418033797970743
+-----------------------------------------------------------------
+Rider  8 dengan Path :
+ [Rose Catering 3EJ15Y5O 86RWME7T 57FOBDKD 1CMVU3AE 565ON8YJ 542P4MKB 40RP85WP PVOH6WD8 60B6SX6Q P1XO6K4F 4GFQ5HJ7] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  14.804802485779122
+-----------------------------------------------------------------
+Rider  9 dengan Path :
+ [Pondok Rawon 4L379A08 355J2F81 3ZKM2569 2HVCD0A6 51UBUO1K 3UB6MT4A 2QXJZVWG 4HEGV4DO 5LQDNOB0 5UJF68A8  53WJWGRK] 
+Membawa  35  makanan
+dengan Jarak Tempuh:  8.741871348614696
+-----------------------------------------------------------------
+Rider  10 dengan Path :
+ [Familia Catering 9AYVVHRS 2KDXBO1K 5TSV5VWN 82DUD03D 2MIPXDBH 3ZQSR632 3D3ZQHQO 84N2GU9U URI3LSRV] 
+Membawa  25  makanan
+dengan Jarak Tempuh:  45.82566419950149
+-----------------------------------------------------------------
+Rider  11 dengan Path :
+ [Ummu Uwais 4GAA84UO 39R7P6D7 2PJ3XNUI 2OMS9JVZ 3DGM1FUY 2HYWBKS1 4JP90SE2 4F3DWWSO 50W8N0H8 5RD94BIW 5SU6PL1Y 579TTC34 Q280F4KF 4G2Q0BDD 4L4Z4S55 5N4TY97K 36G80EJT] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  45.62955201776236
+-----------------------------------------------------------------
+Rider  12 dengan Path :
+ [Tiga Kitchen Catering 2NN33T9V 2HV6K6KS 2S7QPQES 5N8USNCF] 
+Membawa  16  makanan
+dengan Jarak Tempuh:  9.836821163671889
+-----------------------------------------------------------------
+Rider  13 dengan Path :
+ [Dapur Nusantara 5V0TXYRB] 
+Membawa  1  makanan
+dengan Jarak Tempuh:  6.893069960887922
+-----------------------------------------------------------------
+Total jarak tempuh : 303.05736425536406 
+Total waktu yang dibayar :  22
+
+Optimasi Dilakukan :
+Rider  0 dengan Path :
+ [Dapur Miji 1FZHZOZW 216FL94T 3V758V8K 58OGIWIZ 5N0HQP9M 4L3HMEFP 5TMUO6HJ 2I5G783T QW6T4XUZ 1FD97O63 4JYGUWSR 50U5H7Z9 5P5B2LCP] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  11.446542977629761
+-----------------------------------------------------------------
+Rider  1 dengan Path :
+ [Pondok Rawon 5QB1387V 37WYDQAL 341PYND9 1IY8NTQS 4CV8X25C 1EREMSX4 1VK1XOAO 7Z9GBZJM 217XCGF0 UH00QOU8 38NDP0W9 5V325JCT 5SQAGZ43 3TYZ7M4Y 207MQSJN] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  5.45991020545006
+-----------------------------------------------------------------
+Rider  2 dengan Path :
+ [Familia Catering 3E6F9JPF 3BW1116B 4DAHFVA5 51ZY8YWN 5PBGTXL2 217R4KWC 3RMHZUBC 2GU1ULZC 3T2W84PS 3EH41GC2 21BP7S94 2OR6O6PD 56BBU975 37MDLON0 5206CY92 4ZJ58XFT] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  29.858044704402182
+-----------------------------------------------------------------
+Rider  3 dengan Path :
+ [Rose Catering 3QY2PX9S UPZ3XRMC 25T6WIX6 2MMGF15J 2F9A53BF RD09VM2V 3RQTCAZ9 70HJ86KJ 9BKOTYZM 4E74CSUP] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  32.99295387563146
+-----------------------------------------------------------------
+Rider  4 dengan Path :
+ [Tiga Kitchen Catering 1ETNG7M2 1BELNM6L 1ZPZKUUL 56D5EYXT 3V9H3CNV 5PB8GTQP 1BEQW0G9 34JD8T7P Q6BY9KLR 57FWCQEC 21BVT9YU 35MHY7L8 1A5YLSXO 4G9CNKB6 4GA52MRU 532Z3TMZ 57JM3D34 8B9S30VE 4F7BUGNX 1DBK824Y] 
+Membawa  39  makanan
+dengan Jarak Tempuh:  25.940486123016388
+-----------------------------------------------------------------
+Rider  5 dengan Path :
+ [Dapur Nusantara 3RKFWUSO 5OB24Q2I 6Q82SGTO 3D02F7Y4 50NWB01K 4IQO0CYR TIY9X08X 4IWN4UHT 5QB198KW 3VDRVNC3 1ADPV20M 3NSJYCDR 197OGONO 3ZONK3PA WVQJYLQW 3B5ZSV41] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  22.58948956576859
+-----------------------------------------------------------------
+Rider  6 dengan Path :
+ [Dapur Miji 2PP9C4RW 99JPN82I 4CWFSOVV 2NI8PFRH 2S5SIAX6 25NJXBFS 2K210EOB 569QB7TL 9EWYWYRG 1DTG5UN9 U9L34QQH 3WHIQ4A6 5TU0F8SR 2KBT36Z6 1VOEJ8JH] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  28.32007180411132
+-----------------------------------------------------------------
+Rider  7 dengan Path :
+ [Rose Catering 3EJ15Y5O 86RWME7T 57FOBDKD 1CMVU3AE 565ON8YJ 542P4MKB 40RP85WP PVOH6WD8 60B6SX6Q P1XO6K4F 4GFQ5HJ7] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  14.804802485779122
+-----------------------------------------------------------------
+Rider  8 dengan Path :
+ [Pondok Rawon  53WJWGRK 5UJF68A8 4HEGV4DO 5LQDNOB0 2QXJZVWG 3UB6MT4A 4L379A08 355J2F81 3ZKM2569 2HVCD0A6 51UBUO1K] 
+Membawa  35  makanan
+dengan Jarak Tempuh:  7.842463725919146
+-----------------------------------------------------------------
+Rider  9 dengan Path :
+ [Familia Catering 9AYVVHRS 2KDXBO1K URI3LSRV 5TSV5VWN 82DUD03D 2MIPXDBH 3ZQSR632 3D3ZQHQO 84N2GU9U] 
+Membawa  25  makanan
+dengan Jarak Tempuh:  35.141671169846475
+-----------------------------------------------------------------
+Rider  10 dengan Path :
+ [Ummu Uwais 4GAA84UO 39R7P6D7 2PJ3XNUI 4JP90SE2 2OMS9JVZ 3DGM1FUY 2HYWBKS1 4G2Q0BDD 4L4Z4S55 5N4TY97K Q280F4KF 579TTC34 36G80EJT 5SU6PL1Y 5RD94BIW 50W8N0H8 4F3DWWSO] 
+Membawa  40  makanan
+dengan Jarak Tempuh:  40.496252592644645
+-----------------------------------------------------------------
+Rider  11 dengan Path :
+ [Tiga Kitchen Catering 2NN33T9V 2HV6K6KS 2S7QPQES 5N8USNCF] 
+Membawa  16  makanan
+dengan Jarak Tempuh:  9.836821163671889
+-----------------------------------------------------------------
+Rider  12 dengan Path :
+ [Dapur Nusantara 5V0TXYRB] 
+Membawa  1  makanan
+dengan Jarak Tempuh:  6.893069960887922
+-----------------------------------------------------------------
+Total jarak tempuh : 271.622580354759 
+Total waktu yang dibayar :  21
