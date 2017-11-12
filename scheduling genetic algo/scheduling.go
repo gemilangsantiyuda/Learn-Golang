@@ -20,6 +20,7 @@ type Individu struct{
 
 //for concurrency purpose :
 var wg sync.WaitGroup
+var m sync.Mutex
 
 func (ind *Individu) calculateFitness(processList []Process, currentTime int) {
   //calculate Average Turn Around Time = average of sum of endtime-arrivaltime for eachprocess
@@ -57,7 +58,7 @@ func initChromosom(processList []Process,currentTime int,nChromosom,length int) 
     //get the randomize Chromosom fitness value
     initialChromosom = append(initialChromosom,Individu{temp,0})
     wg.Add(1)
-    initialChromosom[i].calculateFitness(processList,currentTime)
+    go initialChromosom[i].calculateFitness(processList,currentTime)
   }  
   wg.Wait()
   return initialChromosom
@@ -106,14 +107,14 @@ func selectParents(chromosomList []Individu, nParent int, PC float64 ) []Individ
 }
 
 func orderCrossover(parentA,parentB Individu)(Individu,Individu){
-  defer wg.Done()
   length:= len(parentA.Chromosom)
   //dummy copy parent to offspring
-  var offspringA,offspringB Individu
+  var offspringA,offspringB []int
   for i:=0;i<length;i++{
-    offspringA.Chromosom = append(offspringA.Chromosom,0)
-    offspringB.Chromosom = append(offspringB.Chromosom,0)    
+    offspringA = append(offspringA,0)
+    offspringB = append(offspringB,0)    
   }  
+  
   idxA:= rand.Intn(len(parentA.Chromosom))
   idxB:= rand.Intn(len(parentA.Chromosom))  
   
@@ -132,12 +133,12 @@ func orderCrossover(parentA,parentB Individu)(Individu,Individu){
   }
 
   for i:=idxA;i<=idxB;i++{
-    offspringA.Chromosom[i] = parentA.Chromosom[i]
-    existA[offspringA.Chromosom[i]] = true
-    offspringB.Chromosom[i] = parentB.Chromosom[i]        
-    existB[offspringB.Chromosom[i]] = true  
+    offspringA[i] = parentA.Chromosom[i]
+    existA[offspringA[i]] = true
+    offspringB[i] = parentB.Chromosom[i]        
+    existB[offspringB[i]] = true  
   }
-  
+  //time.Sleep(3*time.Microsecond)
   //complete the offspringA
   currentIdx:=0
   for i:=0;i<length;i++{
@@ -145,7 +146,7 @@ func orderCrossover(parentA,parentB Individu)(Individu,Individu){
       currentIdx = idxB+1
     }
     if (!existA[parentB.Chromosom[i]]) {
-      offspringA.Chromosom[currentIdx] = parentB.Chromosom[i]
+      offspringA[currentIdx] = parentB.Chromosom[i]
       currentIdx++
     }
   }
@@ -157,17 +158,17 @@ func orderCrossover(parentA,parentB Individu)(Individu,Individu){
       currentIdx = idxB+1
     }
     if(!existB[parentA.Chromosom[i]]) {
-      offspringB.Chromosom[currentIdx] = parentA.Chromosom[i]
+      offspringB[currentIdx] = parentA.Chromosom[i]
       currentIdx++
     }
   }
   
-  return offspringA,offspringB
+  return Individu{offspringA,0},Individu{offspringB,0}
 }
-
+  
 func mutate(offspringList []Individu, PM float64) []Individu{
   //determine number of mutation and where it will happen
-
+  //fmt.Println(len(offspringList))
   length := len(offspringList[0].Chromosom)
   totalLength:= len(offspringList)*length
   nMutation := int(PM*float64(totalLength))
@@ -184,24 +185,22 @@ func mutate(offspringList []Individu, PM float64) []Individu{
     idxMutation = append(idxMutation, randomIdx)
   }
 
-  for i:=0;i<len(idxMutation);i++{
-    wg.Add(1)
-    go func(idx int){
-      defer wg.Done()
-      n:= (idxMutation[idx]/length)
-      m1:= idxMutation[idx] %length
-      m2:= rand.Intn(length)
-      for m1==m2{
-        m2= rand.Intn(length)
-      }        
-      //swap the chromosom of offspring[n] at gen m1 and m2
-      tmp:= offspringList[n].Chromosom[m1]
-      offspringList[n].Chromosom[m1] = offspringList[n].Chromosom[m2]
-      offspringList[n].Chromosom[m2] = tmp
-    }(i)    
+  for i:=0;i<len(idxMutation);i++{  
+    n:= (idxMutation[i]/length)
+
+    m1:= idxMutation[i]%length
+    m2:= rand.Intn(length)
+    for m1==m2{
+      m2= rand.Intn(length)
+    }        
+    //fmt.Println(offspringList[n])
+    //swap the chromosom of offspring[n] at gen m1 and m2
+    tmp:= offspringList[n].Chromosom[m1]
+    offspringList[n].Chromosom[m1] = offspringList[n].Chromosom[m2]
+    offspringList[n].Chromosom[m2] = tmp
   }  
-  wg.Wait()
-  return offspringList
+
+  return offspringList  
 }
 
 func crossover(processList []Process,currentTime int, parentList []Individu, PM float64) []Individu{
@@ -211,15 +210,19 @@ func crossover(processList []Process,currentTime int, parentList []Individu, PM 
       parentA = parentList[i]
       if i==len(parentList)-1{
         parentB = parentList[0]        
+  
       } else {
         parentB = parentList[i+1]
       }
       wg.Add(1)
       go func(){
         offspringA,offspringB := orderCrossover(parentA,parentB)
-        offspringList = append(offspringList,offspringA)
-        offspringList = append(offspringList,offspringB)
-      }()      
+        m.Lock()
+          offspringList = append(offspringList,offspringA)
+          offspringList = append(offspringList,offspringB)               
+        m.Unlock()      
+        defer wg.Done()
+        }()
   }
   wg.Wait()
   if len(offspringList)==0{
@@ -229,16 +232,19 @@ func crossover(processList []Process,currentTime int, parentList []Individu, PM 
   return offspringList
 }
 
-func scheduling(processList []Process, currentTime int,nChromosom,nParent int, PC,PM float64) []Process{
+func scheduling(processList []Process, currentTime int,nChromosom,nParent int, PC,PM,PT float64) []Process{
   rand.Seed( time.Now().UTC().UnixNano())
 
 
   //initialization of chromosoms (first generation)
   length:= len(processList)
   chromosomList:= initChromosom(processList,currentTime,nChromosom,length)
-      
+  
+  nGeneration:=0    
   for {
-    //parents selection using roulettewheel  
+    nGeneration++
+  
+    //parents selection using roulettewheel   
     parentList:=selectParents(chromosomList,nParent,PC)
     
     //offspring production with ordercrossover
@@ -250,7 +256,7 @@ func scheduling(processList []Process, currentTime int,nChromosom,nParent int, P
     }
     for i:=0;i<len(offspringList);i++{
       wg.Add(1)
-      offspringList[i].calculateFitness(processList,currentTime)    
+      go offspringList[i].calculateFitness(processList,currentTime)    
     } 
     wg.Wait()
     sort.Slice(offspringList,func(lhs,rhs int) bool {
@@ -265,14 +271,15 @@ func scheduling(processList []Process, currentTime int,nChromosom,nParent int, P
     eps:= 0.000001
     bestFitness:=chromosomList[0].Fitness
     
-    fmt.Println(bestFitness)
+    
+    //fmt.Println(len(chromosomList)," ",1/bestFitness)
     freqSame:=0
     for i:=0;i<len(chromosomList);i++{
       if math.Abs(chromosomList[i].Fitness-bestFitness)<eps{
         freqSame++
       }
     }
-    if float64(freqSame)/float64(nChromosom) >= 0.5{
+    if float64(freqSame)/float64(nChromosom) >= PT{
       break
     }
   }    
@@ -282,6 +289,6 @@ func scheduling(processList []Process, currentTime int,nChromosom,nParent int, P
   for i:=0;i<len(chromosomList[0].Chromosom);i++{
     scheduledProcess = append(scheduledProcess,processList[chromosomList[0].Chromosom[i]])
   }
-  
+  fmt.Println(nChromosom,",",nParent,",",PC,",",PM,",",PT,",",chromosomList[0].Fitness,",",nGeneration)  
   return scheduledProcess
 }

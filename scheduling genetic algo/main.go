@@ -9,7 +9,7 @@ import (
   
 func main(){
   //read inputFile
-  inputFile, err := ioutil.ReadFile("inputScheduling.csv")
+  inputFile, err := ioutil.ReadFile("inputSchedulingx.csv")
   if err!= nil{
     fmt.Println(err)
     return
@@ -20,7 +20,7 @@ func main(){
   records,err := csvReader.ReadAll()
   
   var processList []Process  
-  currentTime,_ := strconv.Atoi(records[0][1]) 
+   currentTime,_ := strconv.Atoi(records[0][1]) 
   for i:=2; i<len(records); i++{
     arrivalTime,_ := strconv.Atoi(records[i][1])
     burstTime,_ := strconv.Atoi(records[i][2])
@@ -28,10 +28,27 @@ func main(){
   }
   
   fmt.Println(processList)
+  nChromosom := []int{10,50,100}
+  nParent := []int{10,20,40}//nParent*nChromosom = jumlah parent
+  PC := []float64{0.6,0.7,0.8}
+  PM := []float64{0.1,0.15,0.2}
+  PT := []float64{0.5,0.6,0.7}  
   //get scheduledProcessList  
   //scheduling parameter scheduling(processList that wanna be scheduled ; currentTime ; number of chromosoms
-  //we want in a generation; number of parents in a crossover ; PC probability of crossover ; PM probability of mutation
-  scheduledProcessList := scheduling(processList,currentTime,10,10,0.6,0.1)
+  //we want in a generation; number of parents in a crossover ; PC probability of crossover ; PM probability of mutation, PT percentage for stopping criteria
+  var scheduledProcessList []Process
+  for i:= range(nChromosom){
+    for j:= range(nParent){
+      for k:= range(PC){
+        for m:= range(PM){
+          for n:= range(PT){
+            scheduledProcessList = scheduling(processList,currentTime,nChromosom[i],nParent[j],PC[k],PM[m],PT[n])
+        }
+       } 
+      }  
+   } 
+  }
   
+   
   fmt.Println(scheduledProcessList)  
 }
