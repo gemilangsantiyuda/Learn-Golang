@@ -8,6 +8,9 @@ import (
   "log"
 )
 
+
+const googleDistanceKey = "AIzaSyAhtIh45bWxhUhAO6vd2w_xv9YKQXv9tAw"
+
 var kitchenList []Kitchen  
 var orderList []Order
 func main(){  
@@ -72,17 +75,25 @@ func main(){
     fmt.Println(kitchenList[i].Id,kitchenList[i].Min_capacity,kitchenList[i].Max_capacity,kitchenList[i].Order_qty)
   }  
   
-  //do the maximum_matching
-  
+  //do the maximum_matching  
   orderList,kitchenList = NaiveOptimizeCluster(orderList,kitchenList,10)
   fmt.Println("-----------------------------")
   for i:=range(kitchenList){
     fmt.Println(kitchenList[i].Id,kitchenList[i].Min_capacity,kitchenList[i].Max_capacity,kitchenList[i].Order_qty)
   }  
      
+  fmt.Println(GetGoogleDistance(kitchenList[0].Loc_lat,kitchenList[0].Loc_lon,orderList[0].Latitude,orderList[0].Longitude))
+  
+  //build paths greedily
+  pathList:= BuildPathList(orderList,kitchenList)
+  fmt.Println(pathList)
+  
+
+  
   http.Handle("/", &templateHandler{filename: "GoogleMap.html"})
   // start the web server
   if err := http.ListenAndServe(":8080", nil); err != nil {
     log.Fatal("ListenAndServe:", err)
-  }  
+  }    
+   
 }

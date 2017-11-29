@@ -43,6 +43,7 @@ type Order struct{
   Latitude,Longitude float64
   Kitchen_distance []Distance 
   Order_distance []Distance
+  Used bool
 }
 
 type templateHandler struct {
@@ -55,3 +56,31 @@ type DataTemplate struct {
   KitchenList []Kitchen
   OrderList []Order
 } 
+
+type Path struct {
+  Id int
+  Path_idx []int
+  Path_name []string
+  Length float64
+  Time float64
+  Order_qty int
+}
+
+type GoogleDistanceResponse struct {
+  Destination_addresses []string
+  Origin_addresses []string
+  Rows []struct{
+    Elements []struct {
+      Distance struct {
+        Text string
+        Value int
+      }
+      Duration struct {
+        Text string
+        Value int
+      }
+      Status string
+    }    
+  }
+  Status string
+}
