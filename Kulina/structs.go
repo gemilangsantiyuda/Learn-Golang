@@ -35,6 +35,7 @@ type Kitchen struct {
   Order_distance []Distance
   Order_count int
   Order_qty int
+  Id_DM int
 }
 
 type Order struct{
@@ -44,6 +45,7 @@ type Order struct{
   Kitchen_distance []Distance 
   Order_distance []Distance
   Used bool
+  ID_DM int
 }
 
 type templateHandler struct {

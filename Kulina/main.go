@@ -8,7 +8,6 @@ import (
   "log"
 )
 
-
 const googleDistanceKey = "AIzaSyAhtIh45bWxhUhAO6vd2w_xv9YKQXv9tAw"
 
 var kitchenList []Kitchen  
