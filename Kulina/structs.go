@@ -6,46 +6,59 @@ import (
    "text/template"
 )
 
-type KitchenScan struct {
-  id sql.NullInt64
-  name sql.NullString
-  min_capacity,max_capacity,optimum_capacity sql.NullInt64
-  loc_lat,loc_lon sql.NullFloat64
+type CoordinateSQLContainer struct {
+  Latitude,Longitude sql.NullFloat64
 }
 
-type OrderScan struct{
-  id sql.NullInt64
-  qty sql.NullInt64  
-  latitude,longitude sql.NullFloat64    
+type Coordinate struct {
+  Latitude,Longitude float64
+}
+
+type KitchenCapacitySQLContainer struct {
+  Min,Optimum,Max sql.NullInt64
+}
+
+type KitchenCapacity struct {
+  Min,Optimum,Max int
+}
+
+type KitchenSQLContainer struct {
+  Id sql.NullInt64
+  Name sql.NullString
+  Capacity KitchenCapacitySQLContainer
+  Coord CoordinateSQLContainer
+}
+
+type OrderSQLContainer struct{
+  Id sql.NullInt64  
+  Qty sql.NullInt64  
+  Coord CoordinateSQLContainer   
 }
 
 type Distance struct{
-  Idx int
+  Index int
   Distance float64
 }
 
 type Kitchen struct {
   Id int
   Name string
-  Min_capacity int
-  Max_capacity int
-  Optimum_capacity int
-  Loc_lat float64  
-  Loc_lon float64    
-  Order_distance []Distance
-  Order_count int
-  Order_qty int
-  Id_DM int
+  Capacity KitchenCapacity
+  Coord Coordinate
+  OrderDistanceList []Distance
+  DistinctOrderCount int
+  OrderQty int
+  IndexOnDistanceMatrix int
 }
 
 type Order struct{
   Id int
   Qty int
-  Latitude,Longitude float64
-  Kitchen_distance []Distance 
-  Order_distance []Distance
-  Used bool
-  ID_DM int
+  Coord Coordinate
+  KitchenDistanceList []Distance 
+  OrderDistanceList []Distance
+  IsServed bool
+  IndexOnDistanceMatrix int
 }
 
 type templateHandler struct {
@@ -54,21 +67,22 @@ type templateHandler struct {
   templ *template.Template
 }
 
-type DataTemplate struct {
+type DataForTemplate struct {
   KitchenList []Kitchen
   OrderList []Order
+  GoogleAPIKey string
 } 
 
 type Path struct {
   Id int
-  Path_idx []int
-  Path_name []string
+  PathWithIndex []int
+  PathWithName []string
   Length float64
-  Time float64
-  Order_qty int
+  ElapsedTime float64
+  OrderQty int
 }
 
-type GoogleDistanceResponse struct {
+type GoogleAPIDistanceResponse struct {
   Destination_addresses []string
   Origin_addresses []string
   Rows []struct{
