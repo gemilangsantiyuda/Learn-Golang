@@ -27,3 +27,35 @@ func (kitchen *Kitchen) BuildOrderDistanceList(orderList []Order){
     return kitchen.OrderDistanceList[lhs].Distance<kitchen.OrderDistanceList[rhs].Distance
   })
 }
+
+func (kitchen *Kitchen) CanServe(order *Order) bool{
+  kitchenHasEnoughCapacity:=(kitchen.OrderQty + order.Qty <= kitchen.Capacity.Max)
+  isCloseEnough:= (GetHaversineDistance(kitchen.Coord,order.Coord)<=MAX_PATH_LENGTH)
+  return kitchenHasEnoughCapacity && isCloseEnough
+}
+
+func (kitchen *Kitchen) CanLetGo(order *Order) bool{
+  kitchenHasEnoughOrder:=(kitchen.OrderQty-order.Qty>=kitchen.Capacity.Min)
+  return kitchenHasEnoughOrder 
+}
+
+func (kitchenOrigin *Kitchen) GiveOrderToKitchen(order *Order, kitchenDestination *Kitchen){
+  kitchenDestination.OrderQty += order.Qty
+  kitchenDestination.DistinctOrderCount++
+  kitchenOrigin.DistinctOrderCount--
+  kitchenOrigin.OrderQty -= order.Qty
+  
+  kitchenDestinationIndex:=-1
+  for i:= range order.KitchenDistanceList{
+    if KitchenList[order.KitchenDistanceList[i].Index].Id == kitchenDestination.Id {
+      kitchenDestinationIndex = i
+      break
+    }
+  }
+  
+  for k:=kitchenDestinationIndex;k>0;k--{
+    tmp:=order.KitchenDistanceList[k]
+    order.KitchenDistanceList[k] = order.KitchenDistanceList[k-1]
+    order.KitchenDistanceList[k-1] = tmp
+  }
+}

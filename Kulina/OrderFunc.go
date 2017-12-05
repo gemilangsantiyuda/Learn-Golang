@@ -36,3 +36,7 @@ func (order *Order) BuildKitchenDistanceList(kitchenList []Kitchen){
     return order.KitchenDistanceList[lhs].Distance<order.KitchenDistanceList[rhs].Distance
   })
 }
+
+func (order *Order) GetServerKitchenIndex() int{
+  return order.KitchenDistanceList[0].Index
+}

@@ -16,16 +16,16 @@
 
     <script>
       function initMap() {
-      	var pinColor = ["FF2F2F","FFA22F","FFE12F","6AFF2F","000000","F49E9E","F2B17A","4BF291","21EABC","D9A1E7","FFFFFF","005DC4","070066","2A09AC"];              	
+      	var pinColor = ["6AFF2F","FFA22F","FFE12F","F49E9E","000000","FF2F2F","F2B17A","4BF291","21EABC","D9A1E7","FFFFFF","005DC4","070066","2A09AC"];              	
         var kitchens = [];       
         var orders = [];
         {{range $idx,$item := .KitchenList}}
-					kitchens.push({{printf "{lat : %f ,lng : %f,title :%q }" $item.Loc_lat $item.Loc_lon $item.Name }});
+					kitchens.push({{printf "{lat : %f ,lng : %f,title :%q }" $item.Coord.Latitude $item.Coord.Longitude $item.Name }});
         {{end}}
         
         {{range $idx,$item := .OrderList}}
-        	{{$kitchen:= index .Kitchen_distance 0}}
-        	orders.push({{printf "{lat : %f ,lng : %f,kitchen :%d }" $item.Latitude $item.Longitude $kitchen.Idx}})
+        	{{$kitchen:= index .KitchenDistanceList 0}}
+        	orders.push({{printf "{lat : %f ,lng : %f,kitchen :%d }" $item.Coord.Latitude $item.Coord.Longitude $kitchen.Index}})
         {{end}}
         
         var map = new google.maps.Map(document.getElementById('map'), {

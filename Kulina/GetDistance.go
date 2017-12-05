@@ -29,7 +29,7 @@ func GetGoogleDistance(coordOrigin,coordDestination Coordinate) int{
   stringLongitudeDestination:= strconv.FormatFloat(coordDestination.Longitude, 'f', 7, 64)     
   
   //fmt.Println(slat1,slon1,slat2,slon2)
-  url := "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+stringLatitudeOrigin+","+stringLongitudeOrigin+"&destinations="+stringLatitudeDestination+","+stringLongitudeDestination+"&departure_time=1541202457&traffic_model=best_guess&key="+GoogleAPIKey
+  url := "https://maps.googleapis.com/maps/api/distancematrix/json?origins="+stringLatitudeOrigin+","+stringLongitudeOrigin+"&destinations="+stringLatitudeDestination+","+stringLongitudeDestination+"&departure_time=1541202457&traffic_model=best_guess&key="+GOOGLE_API_KEY
   //fmt.Println(url)
 
   spaceClient := http.Client{

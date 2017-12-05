@@ -17,7 +17,7 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
   t.once.Do(func() {
     t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
   })
-  data:= DataForTemplate{KitchenList,OrderList,GoogleAPIKey} 
+  data:= DataForTemplate{KitchenList,OrderList,GOOGLE_API_KEY} 
   t.templ.Execute(w,data)
 }
 
