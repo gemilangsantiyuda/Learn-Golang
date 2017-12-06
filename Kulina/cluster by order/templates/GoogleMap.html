@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        height: 600px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <p id="demo">
+    </p>
+    <div id="map"></div>
+
+    <script>
+      function initMap() {
+      	var pinColor = ["6AFF2F","FFA22F","FFE12F","F49E9E","000000","FF2F2F","F2B17A","4BF291","21EABC","D9A1E7","FFFFFF","005DC4","070066","2A09AC"];              	
+        var kitchens = [];       
+        var orders = [];
+        {{range $idx,$item := .KitchenList}}
+					kitchens.push({{printf "{lat : %f ,lng : %f,title :%q }" $item.Coord.Latitude $item.Coord.Longitude $item.Name }});
+        {{end}}
+        
+        {{range $idx,$item := .OrderList}}
+        	{{$kitchen:= index .KitchenDistanceList 0}}
+        	orders.push({{printf "{lat : %f ,lng : %f,kitchen :%d }" $item.Coord.Latitude $item.Coord.Longitude $kitchen.Index}})
+        {{end}}
+        
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: {lat:kitchens[0].lat ,lng: kitchens[0].lng}
+        });
+        				
+				for (i=0;i<kitchens.length;i++) {						
+					var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor[i],
+		      new google.maps.Size(30, 44),
+		      new google.maps.Point(0,0),
+		      new google.maps.Point(10,34),
+		      new google.maps.Size(30,44));
+					var marker = new google.maps.Marker({
+						position: {lat: kitchens[i].lat, lng : kitchens[i].lng},
+						map: map,
+						icon : pinImage,
+						title : kitchens[i].title,
+						label : kitchens[i].title				
+					});        
+				}
+				for (i=0;i<orders.length;i++) {						
+					var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor[orders[i].kitchen],
+		      new google.maps.Size(21, 34),
+		      new google.maps.Point(0,0),
+		      new google.maps.Point(10, 34),
+		      new google.maps.Size(15,25));
+					var marker = new google.maps.Marker({
+						position: {lat: orders[i].lat, lng : orders[i].lng},
+						map: map,
+						icon : pinImage			
+					});        
+				}
+			}
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQvppt6dMryRvlCvXlSEsmqjkpXjKzyDw&callback=initMap">
+    </script>
+  </body>
+</html>
