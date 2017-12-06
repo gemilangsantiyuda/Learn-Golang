@@ -4,10 +4,14 @@ import (
 )
 
 const GOOGLE_API_KEY = "AIzaSyAhtIh45bWxhUhAO6vd2w_xv9YKQXv9tAw"
-const CHOSEN_DATE ="2017-11-20"
-const MAX_PATH_LENGTH = 90000 //in meter
+const CHOSEN_DATE ="2017-12-05"
+const MAX_PATH_LENGTH = 90000.000000 //in meter
+const OPTIMIZATION_REPETITION = 10
+
 var KitchenList []Kitchen  
 var OrderList []Order
+var PathList []Path
+var PlaceList []Place
 
 func main(){  
   //get handle or connection for kulina database
@@ -19,35 +23,42 @@ func main(){
 
   //get orders from database and put into order_list
   OrderList = GetOrdersFromDatabase(db,CHOSEN_DATE)
-
-  //building haversine distance list of kitchens to orders, and orders to kitchens, and orders to orders
+  
+  //get places from databases
+  //PlaceList = GetPlacesFromDatabase(db,CHOSEN_DATE)
+  
+  /*isCapacityFit := CheckKitchenCapacityToOrderQty()
+  if !isCapacityFit {
+    fmt.Println("We have capacity error!")
+    return
+  }*/
+    
+  //building haversine distance list of kitchens to Orders
   for i:=range(KitchenList){
-    KitchenList[i].BuildOrderDistanceList(OrderList)
+    KitchenList[i].BuildOrderDistanceList()
   }  
+
+  //building haversine distance list of orders to kitchens
   for i:=range(OrderList){
-    OrderList[i].BuildOrderDistanceList(OrderList)
-    OrderList[i].BuildKitchenDistanceList(KitchenList)    
-  }
+    OrderList[i].BuildKitchenDistanceList()
+  }  
   
   //clustering!
-  GreedyClustering()
+  GreedyClustering()  
   for i:=range(KitchenList){
     fmt.Println(KitchenList[i].Id,KitchenList[i].Capacity.Min,KitchenList[i].Capacity.Max,KitchenList[i].DistinctOrderCount,KitchenList[i].OrderQty)
   }  
   
-  /*//do the maximum_matching  
-  orderList,kitchenList = NaiveOptimizeCluster(orderList,kitchenList,10)
+  //do the maximum_matching  
+  GreedyClusterOptimization(OPTIMIZATION_REPETITION) 
   fmt.Println("-----------------------------")
-  for i:=range(kitchenList){
-    fmt.Println(kitchenList[i].Id,kitchenList[i].Min_capacity,kitchenList[i].Max_capacity,kitchenList[i].Order_qty)
-  }  
-     
-  fmt.Println(GetGoogleDistance(kitchenList[0].Loc_lat,kitchenList[0].Loc_lon,orderList[0].Latitude,orderList[0].Longitude))
-  
-  //build paths greedily
-  pathList:= BuildPathList(orderList,kitchenList)
-  fmt.Println(pathList)
-  
-  */
+  for i:=range(KitchenList){
+    fmt.Println(KitchenList[i].Id,KitchenList[i].Capacity.Min,KitchenList[i].Capacity.Max,KitchenList[i].DistinctOrderCount,KitchenList[i].OrderQty)
+  }   
+         
+  //make path greedily         
+  //GreedyBuildPathList()
+    
+  //view via localhost the distribution of orders to kitchens in google map
   RunKitchensAndOrdersView()   
 }

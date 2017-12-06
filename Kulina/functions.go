@@ -28,3 +28,37 @@ func RunKitchensAndOrdersView(){
     log.Fatal("ListenAndServe:", err)
   }   
 }
+
+func OrdersCanSwapKitchen(orderA,orderB *Order) bool {
+  kitchenA := KitchenList[orderA.KitchenDistanceList[0].Index]
+  kitchenB := KitchenList[orderB.KitchenDistanceList[0].Index]  
+  kitchenANewQty := kitchenA.OrderQty - orderA.Qty + orderB.Qty
+  kitchenBNewQty := kitchenB.OrderQty - orderB.Qty + orderA.Qty 
+  kitchenAConstraint := kitchenANewQty>=kitchenA.Capacity.Min && kitchenANewQty<=kitchenA.Capacity.Max
+  kitchenBConstraint := kitchenBNewQty>=kitchenB.Capacity.Min && kitchenBNewQty<=kitchenB.Capacity.Max
+  return kitchenAConstraint && kitchenBConstraint
+}
+
+func CheckKitchenCapacityToOrderQty() bool {
+  totalOrderQty := 0
+  totalCapacity := 0
+  for i:= range OrderList {
+    foundKitchen := false
+    for j:= range KitchenList {
+      if OrderList[i].Qty <= KitchenList[j].Capacity.Max{
+        foundKitchen=true
+        break
+      }
+    }
+    if !foundKitchen{
+      return false
+    }
+  } 
+  for i:=range OrderList {
+    totalOrderQty += OrderList[i].Qty
+  }
+  for i:=range KitchenList {
+    totalCapacity += KitchenList[i].Capacity.Max
+  }
+  return totalOrderQty<=totalCapacity
+}

@@ -33,10 +33,16 @@ type OrderSQLContainer struct{
   Id sql.NullInt64  
   Qty sql.NullInt64  
   Coord CoordinateSQLContainer   
+  PlaceId sql.NullString
+}
+
+type PlaceSQLContainer struct {
+  Id sql.NullString
+  Qty sql.NullInt64
 }
 
 type Distance struct{
-  Index int
+  Index int 
   Distance float64
 }
 
@@ -46,6 +52,7 @@ type Kitchen struct {
   Capacity KitchenCapacity
   Coord Coordinate
   OrderDistanceList []Distance
+  PlaceDistanceList []Distance
   DistinctOrderCount int
   OrderQty int
   IndexOnDistanceMatrix int
@@ -57,8 +64,16 @@ type Order struct{
   Coord Coordinate
   KitchenDistanceList []Distance 
   OrderDistanceList []Distance
-  IsServed bool
-  IndexOnDistanceMatrix int
+  ServerKitchenIndex int    
+  PlaceId string
+}
+
+type Place struct{
+  Id string
+  Qty int
+  Coord Coordinate
+  OrderList []*Order
+  KitchenDistanceList []Distance
 }
 
 type templateHandler struct {
@@ -75,8 +90,9 @@ type DataForTemplate struct {
 
 type Path struct {
   Id int
-  PathWithIndex []int
-  PathWithName []string
+  IndexList []int
+  IdList []string
+  ServingKitchen Kitchen
   Length float64
   ElapsedTime float64
   OrderQty int

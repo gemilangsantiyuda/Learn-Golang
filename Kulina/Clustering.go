@@ -1,14 +1,16 @@
 package main
 
 import (
-  //"sort"
+  "sort"
+  //"fmt"
 )
 
 func GreedyClustering(){
   for i:= range OrderList{
-    kitchenIdx:=OrderList[i].KitchenDistanceList[0].Index
-    KitchenList[kitchenIdx].DistinctOrderCount++
-    KitchenList[kitchenIdx].OrderQty+=int(OrderList[i].Qty)
+    thisOrder:=&OrderList[i]
+    kitchen:=&KitchenList[thisOrder.GetServerKitchenIndex()]
+    kitchen.DistinctOrderCount++
+    kitchen.OrderQty+= thisOrder.Qty
   }
   ResolveMaximumCapacityViolation()  
   ResolveMinimumCapacityViolation()
@@ -80,192 +82,116 @@ func ResolveMinimumCapacityViolation(){
   } 
 }
 
-/*func NaiveOptimizeClusterGreedy(a int,b int ,OrderList []Order,KitchenList []Kitchen) ([]Order, []Kitchen){
-	type OrderTmp struct{
-		Idx int
-		Lat,Lon float64
-		Req int 
-	}
+func GreedyMaximumOrderMatching(kitchenA,kitchenB *Kitchen){
+	var orderListA,orderListB []*Order	
 	type SwapInfo struct{
-		IdxA,IdxB int
-		Dist float64
-		ReqToA,ReqToB int
-		used bool
+		OrderA,OrderB *Order
+		DistanceProfit float64
+		IsUsed bool
 	}
-	var orderA,orderB []OrderTmp
-	var swapInfo []SwapInfo
-	//var swapChosen []int
-	
+	var swapInfo []SwapInfo	
 	for i:= range OrderList{
-		if OrderList[i].Kitchen_distance[0].Idx == a {
-			orderA = append(orderA, OrderTmp{i,OrderList[i].Latitude,OrderList[i].Longitude,OrderList[i].Qty})
-		}
-		if OrderList[i].Kitchen_distance[0].Idx == b {
-			orderB = append(orderB, OrderTmp{i,OrderList[i].Latitude,OrderList[i].Longitude,OrderList[i].Qty})
+	  thisOrder:=OrderList[i]	  	  
+	  servingKitchen:=&KitchenList[thisOrder.KitchenDistanceList[0].Index]
+		if servingKitchen.Id == kitchenA.Id {
+			orderListA = append(orderListA, &thisOrder)
+		} else if servingKitchen.Id == kitchenB.Id {
+			orderListB = append(orderListB, &thisOrder)		  
+		}		
+	}
+	for i :=range orderListA{
+	  orderA:=orderListA[i]
+	  //debug fmt.Println(orderA.Id,KitchenList[orderA.GetServerKitchenIndex()].Name)	  
+		for j:=range orderListB {	
+		  orderB:=orderListB[j]
+		  //determine wether swapping the orders make "distanceProfit" or not		  
+			oldDistanceSum := orderA.KitchenDistanceList[0].Distance + orderB.KitchenDistanceList[0].Distance
+			newDistanceSum := GetHaversineDistance(orderA.Coord,kitchenB.Coord) + GetHaversineDistance(orderB.Coord,kitchenA.Coord)
+			distanceProfit := oldDistanceSum-newDistanceSum
+			if distanceProfit>0 /*&& (GetHaversineDistance(orderA.Coord,kitchenB.Coord)<=orderA.KitchenDistanceList[0].Distance) && (orderB.KitchenDistanceList[0].Distance <= GetHaversineDistance(orderB.Coord,kitchenA.Coord))*/{
+				swapInfo = append(swapInfo , SwapInfo{orderA,orderB,distanceProfit,false})
+			}									
 		}
 	}
-	//fmt.Println(orderA)
-	//fmt.Println(orderB)
-	
-  //"profit" = smaller sum of distances
-	for i :=range orderA{
-		for j:=range orderB {	
-		  //determine wether to swap the orders make "profit"
-			distOld := OrderList[orderA[i].Idx].Kitchen_distance[0].Distance + OrderList[orderB[j].Idx].Kitchen_distance[0].Distance
-			distNew := Haversine(orderA[i].Lat,orderA[i].Lon,KitchenList[b].Loc_lat,KitchenList[b].Loc_lon)
-			distNew += Haversine(orderB[j].Lat,orderB[j].Lon,KitchenList[a].Loc_lat,KitchenList[a].Loc_lon)
-			dist := distOld-distNew
-			req := -orderA[i].Req + orderB[j].Req
-			if dist>0 {
-				swapInfo = append(swapInfo , SwapInfo{orderA[i].Idx,orderB[j].Idx,dist,req,-req,false})
-			}			
-			
-			
-			//determine wether kitchen B to give the order to kitchen A make "profit"
-			distOld = OrderList[orderB[j].Idx].Kitchen_distance[0].Distance
-			distNew = Haversine(orderB[j].Lat,orderB[j].Lon,KitchenList[a].Loc_lat,KitchenList[a].Loc_lon)
-			dist = distOld-distNew
-			req = orderB[j].Req
-			if dist>0 {
-				swapInfo = append(swapInfo , SwapInfo{-1,orderB[j].Idx,dist,req,-req,false})
-			}						
-		}
-		//determine wether kitchen A to give the order to kitchen B make "profit"
-		distOld := OrderList[orderA[i].Idx].Kitchen_distance[0].Distance
-		distNew := Haversine(orderA[i].Lat,orderA[i].Lon,KitchenList[b].Loc_lat,KitchenList[b].Loc_lon)
-		dist := distOld-distNew
-		req := -orderA[i].Req
-		if dist>0 {
-			swapInfo = append(swapInfo , SwapInfo{orderA[i].Idx,-1,dist,req,-req,false})
-		}						
-	}
+  //determine wether kitchen A giving its order to kitchen B make "distanceProfit"
+  for i:= range orderListA{
+    orderA:=orderListA[i]
+    oldDistanceSum := orderA.KitchenDistanceList[0].Distance
+    newDistanceSum := GetHaversineDistance(orderA.Coord,kitchenB.Coord)
+    distanceProfit := oldDistanceSum-newDistanceSum    
+    if distanceProfit>0 {
+	    swapInfo = append(swapInfo , SwapInfo{orderA,nil,distanceProfit,false})
+    }			
+  }	
+  //determine wether kitchen B giving its order to kitchen A make "distanceProfit"
+  for i:= range orderListB{
+    orderB:= orderListB[i]    
+    oldDistanceSum := orderB.KitchenDistanceList[0].Distance
+    newDistanceSum := GetHaversineDistance(orderB.Coord,kitchenA.Coord)
+    distanceProfit := oldDistanceSum-newDistanceSum
+    if distanceProfit>0 {
+	    swapInfo = append(swapInfo , SwapInfo{nil,orderB,distanceProfit,false})
+    }			
+  }			  
 	sort.SliceStable(swapInfo,func (lhs,rhs int) bool {
-	  return swapInfo[lhs].Dist>swapInfo[rhs].Dist
+	  return swapInfo[lhs].DistanceProfit>swapInfo[rhs].DistanceProfit
 	})
-  //fmt.Println(swapInfo)
 	
-	for i:=range swapInfo{
-	  //if kitchen is giving away order
-	  if (swapInfo[i].IdxA==-1 || swapInfo[i].IdxB == -1) && !swapInfo[i].used {         
-			custA:=swapInfo[i].IdxA
-			custB:=swapInfo[i].IdxB
-			kitchenA:=a
-			kitchenB:=b		
-			reqToA:=swapInfo[i].ReqToA
-			reqToB:=swapInfo[i].ReqToB
-			if (KitchenList[kitchenA].Order_qty+reqToA >= KitchenList[kitchenA].Min_capacity) && (KitchenList[kitchenA].Order_qty+reqToA <= KitchenList[kitchenA].Max_capacity) && (KitchenList[kitchenB].Order_qty+reqToB >= KitchenList[kitchenB].Min_capacity) && (KitchenList[kitchenB].Order_qty+reqToB <= KitchenList[kitchenB].Max_capacity) {
-				
-				swapInfo[i].used = true
-				KitchenList[kitchenA].Order_qty+=reqToA
-				KitchenList[kitchenB].Order_qty+=reqToB
-				
-				if custA>-1{
-				  chosenKitchen := -1
-				  for k:= range KitchenList{
-					  if OrderList[custA].Kitchen_distance[k].Idx == kitchenB {
-						  chosenKitchen = k
-						  break
-					  }				
-				  }
-				  for k:= chosenKitchen; k>0;k--{
-					  tmp:= OrderList[custA].Kitchen_distance[k]
-					  OrderList[custA].Kitchen_distance[k] = OrderList[custA].Kitchen_distance[k-1]
-					  OrderList[custA].Kitchen_distance[k-1] = tmp
-				  }
-				}
-				
-				if custB>-1{
-				  chosenKitchen := -1
-				  for k:= range KitchenList{
-					  if OrderList[custB].Kitchen_distance[k].Idx == kitchenA {
-						  chosenKitchen = k
-						  break
-					  }				
-				  }
-				  for k:= chosenKitchen; k>0;k--{
-					  tmp:= OrderList[custB].Kitchen_distance[k]
-					  OrderList[custB].Kitchen_distance[k] = OrderList[custB].Kitchen_distance[k-1]
-					  OrderList[custB].Kitchen_distance[k-1] = tmp
-				  }
-				}
-				
-				
-				for j:= i+1;j<len(swapInfo);j++{
-					if (swapInfo[j].IdxA == custA && custA>-1) || (swapInfo[j].IdxB == custB && custB >-1) {
-						swapInfo[j].used=true
-					}
-				}
-			}
+	
+	//choose wich swap will be done
+	for i:=range swapInfo{	      
+	  //fmt.Println(swapInfo[i].DistanceProfit)
+	  if swapInfo[i].IsUsed{
+	    continue
+	  }
+	  orderA:=swapInfo[i].OrderA
+	  orderB:=swapInfo[i].OrderB
+	  if orderB==nil{
+  	  //if kitchenA is giving away order
+	    if kitchenA.CanLetGo(orderA) && kitchenB.CanServe(orderA) {
+	        kitchenA.GiveOrderToKitchen(orderA,kitchenB)
+	        swapInfo[i].IsUsed = true
+	    }
+	  } else if orderA==nil{
+  	  //if kitchenB is giving away order
+	    if kitchenB.CanLetGo(orderB) && kitchenA.CanServe(orderB) {
+	        kitchenB.GiveOrderToKitchen(orderB,kitchenA)
+	        swapInfo[i].IsUsed = true
+	    }
+	  } else {
+	    //if kitchens are swapping orders  
+	    if OrdersCanSwapKitchen(orderA,orderB) {
+	      kitchenA.GiveOrderToKitchen(orderA,kitchenB)
+	      kitchenB.GiveOrderToKitchen(orderB,kitchenA)	      
+        swapInfo[i].IsUsed = true
+	    }
 	  }
 	  
-	  //if kitchens are swapping orders
-		if !swapInfo[i].used {
-			custA:=swapInfo[i].IdxA
-			custB:=swapInfo[i].IdxB
-			kitchenA:=a
-			kitchenB:=b		
-			reqToA:=swapInfo[i].ReqToA
-			reqToB:=swapInfo[i].ReqToB
-			if (KitchenList[kitchenA].Order_qty+reqToA >= KitchenList[kitchenA].Min_capacity) && (KitchenList[kitchenA].Order_qty+reqToA <= KitchenList[kitchenA].Max_capacity) && (KitchenList[kitchenB].Order_qty+reqToB >= KitchenList[kitchenB].Min_capacity) && (KitchenList[kitchenB].Order_qty+reqToB <= KitchenList[kitchenB].Max_capacity) {
-				
-				swapInfo[i].used = true
-				KitchenList[kitchenA].Order_qty+=reqToA
-				KitchenList[kitchenB].Order_qty+=reqToB
-				
-				chosenKitchen := -1
-				for k:= range KitchenList{
-					if OrderList[custA].Kitchen_distance[k].Idx == kitchenB {
-						chosenKitchen = k
-						break
-					}				
-				}
-				for k:= chosenKitchen; k>0;k--{
-					tmp:= OrderList[custA].Kitchen_distance[k]
-					OrderList[custA].Kitchen_distance[k] = OrderList[custA].Kitchen_distance[k-1]
-					OrderList[custA].Kitchen_distance[k-1] = tmp
-				}
-				
-				chosenKitchen = -1
-				for k:= range KitchenList{
-					if OrderList[custB].Kitchen_distance[k].Idx == kitchenA {
-						chosenKitchen = k
-						break
-					}				
-				}
-				for k:= chosenKitchen; k>0;k--{
-					tmp:= OrderList[custB].Kitchen_distance[k]
-					OrderList[custB].Kitchen_distance[k] = OrderList[custB].Kitchen_distance[k-1]
-					OrderList[custB].Kitchen_distance[k-1] = tmp
-				}
-				
-				for j:= i+1;j<len(swapInfo);j++{
-					if swapInfo[j].IdxA == custA || swapInfo[j].IdxB == custB {
-						swapInfo[j].used=true
-					}
-				}
-			}
+	  //if swap happens
+		if swapInfo[i].IsUsed {
+		  //flag every swap info that contains orderA or orderB
+		  for j:=i+1;j<len(swapInfo);j++{
+		    if (orderA!=nil && swapInfo[j].OrderA!=nil) && (swapInfo[j].OrderA.Id == orderA.Id) {
+		      swapInfo[j].IsUsed = true
+		    }
+		    if (orderB!=nil && swapInfo[j].OrderB!=nil) && (swapInfo[j].OrderB.Id == orderB.Id) {
+		      swapInfo[j].IsUsed = true
+		    }
+		  }
 		}
-	}	
-	return OrderList,KitchenList
+	}
 }
 
-func NaiveOptimizeCluster(OrderList []Order, KitchenList []Kitchen,cycle int) ([]Order, []Kitchen){
-	for k:=1;k<=cycle;k++{
+func GreedyClusterOptimization(optimizationRepetition int){
+  //repeat for as many as optimizationRepetition
+  //for each pair of kitchen, let them swap orders
+	for k:=1;k<=optimizationRepetition;k++{	  
 		for i:=range KitchenList{
 			for j:=range KitchenList{
 				if i<j{
-					OrderList,KitchenList = NaiveOptimizeClusterGreedy(i,j,OrderList,KitchenList)
-				}
+          GreedyMaximumOrderMatching(&KitchenList[i],&KitchenList[j])					
+				}				
 			}
 		}
 	}
-	for i:=range(KitchenList){
-	  KitchenList[i].Order_count = 0
-	  for j:=range(OrderList){
-	    if OrderList[j].Kitchen_distance[0].Idx == i{
-	      KitchenList[i].Order_count++
-	    }
-	  }
-	}
-	return OrderList,KitchenList
-}*/
+}

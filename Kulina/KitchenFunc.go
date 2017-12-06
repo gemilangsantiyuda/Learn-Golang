@@ -18,13 +18,23 @@ func (kitchen *Kitchen) ScanFromSQL(row *sql.Rows){
   kitchen.Coord= Coordinate{kitchenSQL.Coord.Latitude.Float64, kitchenSQL.Coord.Longitude.Float64}
 }
 
-func (kitchen *Kitchen) BuildOrderDistanceList(orderList []Order){
-  for i:=range(orderList){
-    dist := GetHaversineDistance(kitchen.Coord,orderList[i].Coord)
+func (kitchen *Kitchen) BuildOrderDistanceList(){
+  for i:=range(OrderList){
+    dist := GetHaversineDistance(kitchen.Coord,OrderList[i].Coord)
     kitchen.OrderDistanceList = append(kitchen.OrderDistanceList, Distance{i,dist})
   }
   sort.SliceStable(kitchen.OrderDistanceList,func(lhs,rhs int) bool {
     return kitchen.OrderDistanceList[lhs].Distance<kitchen.OrderDistanceList[rhs].Distance
+  })
+}
+
+func (kitchen *Kitchen) BuildPlaceDistanceList(){
+  for i:=range(PlaceList){
+    dist := GetHaversineDistance(kitchen.Coord,PlaceList[i].Coord)
+    kitchen.PlaceDistanceList = append(kitchen.PlaceDistanceList, Distance{i,dist})
+  }
+  sort.SliceStable(kitchen.PlaceDistanceList,func(lhs,rhs int) bool {
+    return kitchen.PlaceDistanceList[lhs].Distance<kitchen.PlaceDistanceList[rhs].Distance
   })
 }
 
